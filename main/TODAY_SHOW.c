@@ -557,19 +557,21 @@ void app_main(void)
         // 定期更新天气信息（每10分钟，避免API限制）
         if (now - lastWeatherUpdate >= WEATHER_UPDATE_INTERVAL) {
             ESP_LOGI(TAG, "Attempting to update weather information...");
+            
+            // 保存当前天气信息作为备份
+            char backup_weather[32];
+            char backup_temperature[8];
+            strcpy(backup_weather, now_weather);
+            strcpy(backup_temperature, now_temperature);
+            
             if (get_weather_info(now_weather, now_temperature, sizeof(now_weather))) {
                 ESP_LOGI(TAG, "Weather info updated: %s, %s", now_weather, now_temperature);
                 lastWeatherUpdate = now;
             } else {
-                ESP_LOGW(TAG, "Failed to update weather info");
-                // 只在连续失败时设置默认值
-                static int consecutive_failures = 0;
-                consecutive_failures++;
-                if (consecutive_failures > 3) {
-                    strcpy(now_weather, "未知");
-                    strcpy(now_temperature, "N/A");
-                    consecutive_failures = 0; // 重置计数器
-                }
+                ESP_LOGW(TAG, "Failed to update weather info, using previous data");
+                // 恢复备份数据
+                strcpy(now_weather, backup_weather);
+                strcpy(now_temperature, backup_temperature);
             }
         }
         
