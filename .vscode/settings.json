@@ -1,0 +1,15 @@
+{
+  "C_Cpp.intelliSenseEngine": "default",
+  "files.associations": {
+    "stdint.h": "c",
+    "esp_log.h": "c",
+    "string.h": "c",
+    "lcd_driver.h": "c",
+    "esp_http_client.h": "c",
+    "esp_err.h": "c",
+    "semphr.h": "c",
+    "task.h": "c"
+  },
+  "idf.flashType": "UART",
+  "idf.portWin": "COM5"
+}

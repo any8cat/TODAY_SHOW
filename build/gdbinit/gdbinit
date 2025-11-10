@@ -1,0 +1,2 @@
+source D:/ESP32/esp32-idf-project/TODAY_SHOW/build/gdbinit/symbols
+source D:/ESP32/esp32-idf-project/TODAY_SHOW/build/gdbinit/connect
