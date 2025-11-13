@@ -19,5 +19,5 @@ void lcd_draw_rect(lcd_display_t *lcd, uint16_t x, uint16_t y, uint16_t w, uint1
 
 // 外部字模声明
 extern const chinese_char_t chinese_chars[];
-
+extern const uint16_t thunderGod[];
 #endif

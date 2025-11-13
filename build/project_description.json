@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "TODAY_SHOW",
-    "project_version":    "b013827-dirty",
+    "project_version":    "245a487-dirty",
     "project_path":       "D:/ESP32/esp32-idf-project/TODAY_SHOW",
     "idf_path":           "D:/ESP32/v5.5.1/esp-idf",
     "build_dir":          "D:/ESP32/esp32-idf-project/TODAY_SHOW/build",

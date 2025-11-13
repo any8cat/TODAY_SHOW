@@ -2,6 +2,9 @@
 #include "esp_log.h"
 #include "freertos/task.h"
 #include "freertos/semphr.h"
+#include "driver/gpio.h"
+#include "driver/spi_master.h"
+#include "esp_heap_caps.h"
 
 static const char *TAG = "LCD_DRIVER";
 
@@ -19,16 +22,29 @@ static const char *TAG = "LCD_DRIVER";
 #define ST7735_RAMWR   0x2C
 #define ST7735_MADCTL  0x36
 #define ST7735_COLMOD  0x3A
+#define ST7735_FRMCTR1 0xB1
+#define ST7735_FRMCTR2 0xB2
+#define ST7735_FRMCTR3 0xB3
+#define ST7735_INVCTR  0xB4
+#define ST7735_PWCTR1  0xC0
+#define ST7735_PWCTR2  0xC1
+#define ST7735_PWCTR3  0xC2
+#define ST7735_PWCTR4  0xC3
+#define ST7735_PWCTR5  0xC4
+#define ST7735_VMCTR1  0xC5
+#define ST7735_GMCTRP1 0xE0
+#define ST7735_GMCTRN1 0xE1
 
-// 简单的字体数据（8x16）
+// 简单的字体数据
 const uint8_t font_8x16_data[] = {
     // 这里需要包含完整的8x16字体数据
     // 为简洁起见，只显示结构
 };
 
+// 字体变量定义
 font_t font_standard = {8, 16, font_8x16_data};
-font_t font_large = {16, 24, NULL}; // 需要实际字体数据
-font_t font_xlarge = {24, 32, NULL}; // 需要实际字体数据
+font_t font_large = {16, 24, NULL};
+font_t font_xlarge = {24, 32, NULL};
 
 static void lcd_spi_pre_transfer_callback(spi_transaction_t *t)
 {
@@ -42,7 +58,6 @@ esp_err_t lcd_init(lcd_display_t *lcd, const lcd_config_t *config)
 {
     esp_err_t ret;
     
-    // 检查参数有效性
     if (lcd == NULL || config == NULL) {
         ESP_LOGE(TAG, "Invalid parameters");
         return ESP_ERR_INVALID_ARG;
@@ -69,7 +84,7 @@ esp_err_t lcd_init(lcd_display_t *lcd, const lcd_config_t *config)
         .sclk_io_num = config->sclk_io_num,
         .quadwp_io_num = -1,
         .quadhd_io_num = -1,
-        .max_transfer_sz = 4096,
+        .max_transfer_sz = 128 * 128 * 2 + 8,
     };
     
     ret = spi_bus_initialize(SPI2_HOST, &buscfg, SPI_DMA_CH_AUTO);
@@ -80,7 +95,7 @@ esp_err_t lcd_init(lcd_display_t *lcd, const lcd_config_t *config)
     
     // 配置SPI设备
     spi_device_interface_config_t devcfg = {
-        .clock_speed_hz = config->spi_freq_hz,
+        .clock_speed_hz = 27000000,
         .mode = 0,
         .spics_io_num = config->cs_io_num,
         .queue_size = 7,
@@ -105,6 +120,10 @@ esp_err_t lcd_init(lcd_display_t *lcd, const lcd_config_t *config)
     lcd->bg_color = COLOR_BLACK;
     lcd->custom_font_draw = NULL;
     
+    // 设置GREENTAB3偏移量
+    lcd->x_offset = ST7735_GREENTAB3_X_OFFSET;
+    lcd->y_offset = ST7735_GREENTAB3_Y_OFFSET;
+    
     // 创建互斥锁
     lcd->spi_mutex = xSemaphoreCreateMutex();
     if (lcd->spi_mutex == NULL) {
@@ -120,31 +139,101 @@ esp_err_t lcd_init(lcd_display_t *lcd, const lcd_config_t *config)
     gpio_set_level(lcd->rst_pin, 1);
     vTaskDelay(100 / portTICK_PERIOD_MS);
     
-    // 初始化序列
+    // 完整的ST7735初始化序列（解决对比度问题）
+    ESP_LOGI(TAG, "Starting complete ST7735 initialization");
+    
+    // 软件复位
     lcd_send_command(lcd, ST7735_SWRESET);
     vTaskDelay(150 / portTICK_PERIOD_MS);
     
+    // 退出睡眠模式
     lcd_send_command(lcd, ST7735_SLPOUT);
     vTaskDelay(150 / portTICK_PERIOD_MS);
     
-    // 颜色模式设置
-    lcd_send_command(lcd, ST7735_COLMOD);
-    lcd_send_data(lcd, 0x05); // 16位像素
+    // 帧率控制 - 正常模式
+    lcd_send_command(lcd, ST7735_FRMCTR1);
+    lcd_send_data(lcd, 0x01);
+    lcd_send_data(lcd, 0x2C);
+    lcd_send_data(lcd, 0x2D);
+    
+    lcd_send_command(lcd, ST7735_FRMCTR2);
+    lcd_send_data(lcd, 0x01);
+    lcd_send_data(lcd, 0x2C);
+    lcd_send_data(lcd, 0x2D);
+    
+    // 帧率控制 - 空闲模式
+    lcd_send_command(lcd, ST7735_FRMCTR3);
+    lcd_send_data(lcd, 0x01);
+    lcd_send_data(lcd, 0x2C);
+    lcd_send_data(lcd, 0x2D);
+    lcd_send_data(lcd, 0x01);
+    lcd_send_data(lcd, 0x2C);
+    lcd_send_data(lcd, 0x2D);
+    
+    // 显示反转控制
+    lcd_send_command(lcd, ST7735_INVCTR);
+    lcd_send_data(lcd, 0x07);  // 无反转
+    
+    // 电源控制 - 这是提高对比度的关键
+    lcd_send_command(lcd, ST7735_PWCTR1);
+    lcd_send_data(lcd, 0xA2);
+    lcd_send_data(lcd, 0x02);
+    lcd_send_data(lcd, 0x84);
+    
+    lcd_send_command(lcd, ST7735_PWCTR2);
+    lcd_send_data(lcd, 0xC5);
+    
+    lcd_send_command(lcd, ST7735_PWCTR3);
+    lcd_send_data(lcd, 0x0A);
+    lcd_send_data(lcd, 0x00);
+    
+    lcd_send_command(lcd, ST7735_PWCTR4);
+    lcd_send_data(lcd, 0x8A);
+    lcd_send_data(lcd, 0x2A);
+    
+    lcd_send_command(lcd, ST7735_PWCTR5);
+    lcd_send_data(lcd, 0x8A);
+    lcd_send_data(lcd, 0xEE);
+    
+    lcd_send_command(lcd, ST7735_VMCTR1);
+    lcd_send_data(lcd, 0x0E);  // VCOM控制，影响对比度
     
     // 内存数据访问控制
     lcd_send_command(lcd, ST7735_MADCTL);
-    lcd_send_data(lcd, 0xC0); // 调整方向
+    lcd_send_data(lcd, 0xC8);  // 对于GREENTAB3使用0xC8
     
-    lcd_send_command(lcd, ST7735_INVON); // 反色（BGR）
+    // 接口像素格式
+    lcd_send_command(lcd, ST7735_COLMOD);
+    lcd_send_data(lcd, 0x05);  // 16位像素
+    
+    // 伽马校正 - 这是解决颜色问题的关键
+    lcd_send_command(lcd, ST7735_GMCTRP1);
+    lcd_send_data(lcd, 0x02); lcd_send_data(lcd, 0x1C); lcd_send_data(lcd, 0x07); lcd_send_data(lcd, 0x12);
+    lcd_send_data(lcd, 0x37); lcd_send_data(lcd, 0x32); lcd_send_data(lcd, 0x29); lcd_send_data(lcd, 0x2D);
+    lcd_send_data(lcd, 0x29); lcd_send_data(lcd, 0x25); lcd_send_data(lcd, 0x2B); lcd_send_data(lcd, 0x39);
+    lcd_send_data(lcd, 0x00); lcd_send_data(lcd, 0x01); lcd_send_data(lcd, 0x03); lcd_send_data(lcd, 0x10);
+    
+    lcd_send_command(lcd, ST7735_GMCTRN1);
+    lcd_send_data(lcd, 0x03); lcd_send_data(lcd, 0x1D); lcd_send_data(lcd, 0x07); lcd_send_data(lcd, 0x06);
+    lcd_send_data(lcd, 0x2E); lcd_send_data(lcd, 0x2C); lcd_send_data(lcd, 0x29); lcd_send_data(lcd, 0x2D);
+    lcd_send_data(lcd, 0x2E); lcd_send_data(lcd, 0x2E); lcd_send_data(lcd, 0x37); lcd_send_data(lcd, 0x3F);
+    lcd_send_data(lcd, 0x00); lcd_send_data(lcd, 0x00); lcd_send_data(lcd, 0x02); lcd_send_data(lcd, 0x10);
+    
+    // 设置显示窗口
+    lcd_set_window(lcd, 0, 0, lcd->width - 1, lcd->height - 1);
+    
+    // 正常显示模式
+    lcd_send_command(lcd, 0x13);  // NORON
     vTaskDelay(10 / portTICK_PERIOD_MS);
     
+    // 开启显示
     lcd_send_command(lcd, ST7735_DISPON);
     vTaskDelay(150 / portTICK_PERIOD_MS);
     
     // 清屏
     lcd_fill_screen(lcd, COLOR_BLACK);
     
-    ESP_LOGI(TAG, "LCD initialized successfully");
+    ESP_LOGI(TAG, "LCD initialized successfully with enhanced contrast settings");
     return ESP_OK;
 }
 
@@ -188,6 +277,16 @@ void lcd_send_data(lcd_display_t *lcd, uint8_t data)
 
 void lcd_set_window(lcd_display_t *lcd, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 {
+    // 应用GREENTAB3偏移量
+    x0 += lcd->x_offset;
+    x1 += lcd->x_offset;
+    y0 += lcd->y_offset;
+    y1 += lcd->y_offset;
+    
+    // 确保坐标在有效范围内
+    if (x1 >= lcd->width + lcd->x_offset) x1 = lcd->width + lcd->x_offset - 1;
+    if (y1 >= lcd->height + lcd->y_offset) y1 = lcd->height + lcd->y_offset - 1;
+    
     lcd_send_command(lcd, ST7735_CASET);
     lcd_send_data(lcd, x0 >> 8);
     lcd_send_data(lcd, x0 & 0xFF);
@@ -203,6 +302,7 @@ void lcd_set_window(lcd_display_t *lcd, uint16_t x0, uint16_t y0, uint16_t x1, u
     lcd_send_command(lcd, ST7735_RAMWR);
 }
 
+// 其他函数保持不变...
 void lcd_draw_pixel(lcd_display_t *lcd, uint16_t x, uint16_t y, uint16_t color)
 {
     if (x >= lcd->width || y >= lcd->height) return;
@@ -219,7 +319,6 @@ void lcd_fill_rect(lcd_display_t *lcd, uint16_t x, uint16_t y, uint16_t w, uint1
     if (x + w > lcd->width) w = lcd->width - x;
     if (y + h > lcd->height) h = lcd->height - y;
 
-    // 设置窗口（不加锁，因为内部函数已加锁）
     lcd_set_window(lcd, x, y, x + w - 1, y + h - 1);
 
     uint32_t pixels = w * h;
@@ -231,7 +330,7 @@ void lcd_fill_rect(lcd_display_t *lcd, uint16_t x, uint16_t y, uint16_t w, uint1
                 .length = 16,
                 .tx_buffer = color_buffer,
                 .user = (void *)lcd,
-                .cmd = 1, // DC线为1表示数据
+                .cmd = 1,
             };
             spi_device_polling_transmit(lcd->spi, &t);
         }
@@ -247,9 +346,7 @@ void lcd_fill_screen(lcd_display_t *lcd, uint16_t color)
 void lcd_draw_char(lcd_display_t *lcd, uint16_t x, uint16_t y, char c)
 {
     if (lcd->current_font == NULL || lcd->current_font->data == NULL) return;
-    
     // 简单的字符绘制实现
-    // 需要根据实际字体数据实现
 }
 
 void lcd_draw_string(lcd_display_t *lcd, uint16_t x, uint16_t y, const char *str)
@@ -284,4 +381,37 @@ void lcd_set_text_color(lcd_display_t *lcd, uint16_t color)
 void lcd_set_custom_font(lcd_display_t *lcd, void (*draw_func)(int x, int y, const char* str, uint16_t color))
 {
     lcd->custom_font_draw = draw_func;
+}
+
+void lcd_draw_image(lcd_display_t *lcd, int x, int y, int width, int height, const uint16_t *image) 
+{
+    if (lcd == NULL || image == NULL) {
+        ESP_LOGE(TAG, "Invalid parameters in lcd_draw_image");
+        return;
+    }
+    
+    ESP_LOGI(TAG, "Drawing image at (%d,%d) size %dx%d with offsets x=%d, y=%d", 
+             x, y, width, height, lcd->x_offset, lcd->y_offset);
+    
+    // 设置显示窗口（应用偏移）
+    lcd_set_window(lcd, x, y, x + width - 1, y + height - 1);
+    
+    if (xSemaphoreTake(lcd->spi_mutex, portMAX_DELAY) == pdTRUE) {
+        for (int i = 0; i < width * height; i++) {
+            uint16_t color = image[i];
+            // 颜色转换：RGB565 -> BGR565
+            uint16_t bgr_color = ((color & 0x00FF) << 8) | ((color & 0xFF00) >> 8);
+            
+            spi_transaction_t t = {
+                .length = 16,
+                .tx_buffer = &bgr_color,
+                .user = (void *)lcd,
+                .cmd = 1,
+            };
+            spi_device_polling_transmit(lcd->spi, &t);
+        }
+        xSemaphoreGive(lcd->spi_mutex);
+    }
+    
+    ESP_LOGI(TAG, "Image display completed");
 }

@@ -60,7 +60,7 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t e
 void show_info_on_image(lcd_display_t *lcd, int hour, int minute, int second, int year, int month, int day, const char* week, const char* address, const char* weather, const char* temperature);
 void check_network_connection(void);
 
-// 添加任务函数声明
+// 任务函数声明
 static void obtain_time_task(void *arg);
 
 // 设置时区为北京时间（UTC+8）
@@ -90,7 +90,7 @@ void time_sync_notification_cb(struct timeval *tv)
              weekDays[timeinfo.tm_wday]);
 }
 
-// 添加网络检查函数 - 增强版
+// 网络检查函数
 void check_network_connection(void)
 {
     // 检查WiFi连接状态
@@ -130,7 +130,7 @@ void initialize_sntp(void)
     // 设置时区
     set_timezone();
     
-    // 使用新的ESP-SNTP初始化方法
+    // 使用ESP-SNTP初始化方法
     esp_sntp_setoperatingmode(SNTP_OPMODE_POLL);
     
     // 设置多个备用NTP服务器 - 使用更可靠的服务器
@@ -179,7 +179,7 @@ void obtain_time(void)
 
     // 等待时间同步（最多60秒）
     int retry = 0;
-    const int retry_count = 30; // 增加到30次尝试（60秒）
+    const int retry_count = 30; // 30次尝试（60秒）
     time_sync_notified = false;
     
     TickType_t start_ticks = xTaskGetTickCount();
@@ -318,17 +318,14 @@ void show_info_on_image(lcd_display_t *lcd,
         ESP_LOGE(TAG, "LCD is NULL in show_info_on_image");
         return;
     }    
-    
+
     // 显示当前时间到日志（用于调试）
     ESP_LOGI(TAG, "Displaying: %02d:%02d:%02d %04d/%02d/%02d %s - %s %s°C",
              hour, minute, second, year, month, day, week, weather, temperature);
     
-    // 1. 显示背景图片（需要将雷神图片转换为数组）
-    // lcd_draw_image(lcd, 0, 0, 128, 128, thunderGod_image);
+    // 1. 首先绘制背景图片（雷神图片）
+    lcd_draw_image(lcd, 0, 0, 128, 128, thunderGod);
     
-    // 临时用黑色背景
-    lcd_fill_rect(lcd, 0, 0, 128, 128, COLOR_BLACK);
-
     // 2. 左上角显示地点
     lcd_set_custom_font(lcd, show_custom_font);
     lcd_set_text_color(lcd, COLOR_WHITE);
@@ -437,7 +434,7 @@ void app_main(void)
     }
     ESP_ERROR_CHECK(ret);
 
-    // 初始化LCD - 使用全局变量g_lcd
+    // 初始化LCD
     lcd_config_t lcd_config = {
         .miso_io_num = 19,
         .mosi_io_num = 23,
@@ -451,7 +448,7 @@ void app_main(void)
         .invert_colors = true,
     };
     
-    // 使用全局变量g_lcd而不是局部变量lcd
+    // 使用全局变量g_lcd
     if (lcd_init(&g_lcd, &lcd_config) != ESP_OK) {
         ESP_LOGE(TAG, "LCD initialization failed!");
         return;
@@ -465,6 +462,21 @@ void app_main(void)
     
     // 清屏
     lcd_fill_screen(&g_lcd, COLOR_BLACK);
+    
+    // 测试：显示纯色背景
+    ESP_LOGI(TAG, "Testing with solid colors...");
+    lcd_fill_screen(&g_lcd, COLOR_RED);
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    lcd_fill_screen(&g_lcd, COLOR_GREEN);
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    lcd_fill_screen(&g_lcd, COLOR_BLUE);
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    lcd_fill_screen(&g_lcd, COLOR_BLACK);
+    
+    // 测试：显示图片
+    ESP_LOGI(TAG, "Testing image display...");
+    lcd_draw_image(&g_lcd, 0, 0, 128, 128, thunderGod);
+    vTaskDelay(3000 / portTICK_PERIOD_MS);
     
     // 显示连接中信息
     lcd_set_font(&g_lcd, &font_standard);
@@ -511,11 +523,11 @@ void app_main(void)
 
     ESP_LOGI(TAG, "Connecting to WiFi...");
     
-    // 主循环 - 添加时间检查逻辑
+    // 主循环
     time_t last_time_check = time(NULL);
     const time_t max_stuck_time = 60; // 60秒最大卡住时间
     bool time_initialized = false;
-    time_t lastTimeDisplay = 0; // 添加缺失的变量声明
+    time_t lastTimeDisplay = 0;
     
     while (1) {
         // 获取当前时间
@@ -575,7 +587,7 @@ void app_main(void)
             }
         }
         
-        // 显示信息 - 使用全局变量g_lcd
+        // 显示信息
         show_info_on_image(&g_lcd, 
                           timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec,
                           timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday,
