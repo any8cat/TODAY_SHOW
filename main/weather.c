@@ -137,7 +137,7 @@ bool get_weather_info(char *weather, char *temperature, int weather_len)
                                             
                                             strncpy(temperature, temp_text, 6);
                                             temperature[6] = '\0';
-                                            strcat(temperature, "°C");
+                                            //strcat(temperature, "°C");
                                             
                                             success = true;
                                             ESP_LOGI(TAG, "Weather parsed successfully: %s, %s", weather, temperature);

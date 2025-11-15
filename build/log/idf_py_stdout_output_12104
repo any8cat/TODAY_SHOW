@@ -1,0 +1,263 @@
+Command: D:\ESP32\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe D:\ESP32\v5.5.1\esp-idf\tools/idf_monitor.py -p COM5 -b 115200 --toolchain-prefix xtensa-esp32-elf- --target esp32 --revision 0 D:\ESP32\esp32-idf-project\TODAY_SHOW\build\TODAY_SHOW.elf D:\ESP32\esp32-idf-project\TODAY_SHOW\build\bootloader\bootloader.elf --force-color -m 'D:\ESP32\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe' 'D:\ESP32\v5.5.1\esp-idf\tools\idf.py'
+x�x��xxx���ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:6380
+ho 0 tail 12 room 4
+load:0x40078000,len:15916
+load:0x40080400,len:3860
+entry 0x40080638
+[0;32mI (29) boot: ESP-IDF v5.5.1 2nd stage bootloader[0m
+[0;32mI (29) boot: compile time Nov 14 2025 21:18:27[0m
+[0;32mI (29) boot: Multicore bootloader[0m
+[0;32mI (31) boot: chip revision: v3.1[0m
+[0;32mI (33) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (37) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (41) boot.esp32: SPI Flash Size : 2MB[0m
+[0;32mI (44) boot: Enabling RNG early entropy source...[0m
+[0;32mI (49) boot: Partition Table:[0m
+[0;32mI (51) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (58) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (71) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (77) boot: End of partition table[0m
+[0;32mI (81) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=2c094h (180372) map[0m
+[0;32mI (150) esp_image: segment 1: paddr=0003c0bc vaddr=3ffb0000 size=03f5ch ( 16220) load[0m
+[0;32mI (156) esp_image: segment 2: paddr=00040020 vaddr=400d0020 size=aa7fch (698364) map[0m
+[0;32mI (395) esp_image: segment 3: paddr=000ea824 vaddr=3ffb3f5c size=001f0h (   496) load[0m
+[0;32mI (395) esp_image: segment 4: paddr=000eaa1c vaddr=40080000 size=19d54h (105812) load[0m
+[0;32mI (440) esp_image: segment 5: paddr=00104778 vaddr=50000000 size=00020h (    32) load[0m
+[0;32mI (453) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (453) boot: Disabling RNG early entropy source...[0m
+[0;32mI (463) cpu_start: Multicore app[0m
+[0;32mI (471) cpu_start: Pro cpu start user code[0m
+[0;32mI (472) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (472) app_init: Application information:[0m
+[0;32mI (472) app_init: Project name:     TODAY_SHOW[0m
+[0;32mI (476) app_init: App version:      8bc2978-dirty[0m
+[0;32mI (480) app_init: Compile time:     Nov 14 2025 21:18:08[0m
+[0;32mI (485) app_init: ELF file SHA256:  eb02a2c9e...[0m
+[0;32mI (490) app_init: ESP-IDF:          v5.5.1[0m
+[0;32mI (493) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (497) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (501) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (505) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (512) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM[0m
+[0;32mI (516) heap_init: At 3FFB8910 len 000276F0 (157 KiB): DRAM[0m
+[0;32mI (522) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (527) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (533) heap_init: At 40099D54 len 000062AC (24 KiB): IRAM[0m
+[0;33mW (539) spi_flash: Detected boya flash chip but using generic driver. For optimal functionality, enable `SPI_FLASH_SUPPORT_BOYA_CHIP` in menuconfig[0m
+[0;32mI (551) spi_flash: detected chip: generic[0m
+[0;32mI (554) spi_flash: flash io: dio[0m
+[0;33mW (557) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;32mI (571) main_task: Started on CPU0[0m
+[0;32mI (581) main_task: Calling app_main()[0m
+[0;32mI (581) TFT_CLOCK: Starting TFT Clock Application[0m
+[0;32mI (581) LCD_DRIVER: Validating fonts...[0m
+[0;32mI (581) LCD_DRIVER: 8x16 font: actual=1520, expected=1520, chars=95[0m
+[0;32mI (811) LCD_DRIVER: Starting complete ST7735 initialization[0m
+[0;32mI (1601) LCD_DRIVER: LCD initialized successfully with enhanced contrast settings[0m
+[0;32mI (1601) FONTS: Global LCD pointer set successfully[0m
+[0;32mI (5591) TFT_CLOCK: Testing with solid colors...[0m
+[0;32mI (9911) TFT_CLOCK: Testing image display...[0m
+[0;32mI (9911) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (10241) LCD_DRIVER: Image display completed[0m
+[0;32mI (13301) wifi:wifi driver task: 3ffc0cd4, prio:23, stack:6656, core=0[0m
+[0;32mI (13311) wifi:wifi firmware version: 14da9b7[0m
+[0;32mI (13311) wifi:wifi certification version: v7.0[0m
+[0;32mI (13311) wifi:config NVS flash: enabled[0m
+[0;32mI (13311) wifi:config nano formatting: disabled[0m
+[0;32mI (13321) wifi:Init data frame dynamic rx buffer num: 32[0m
+[0;32mI (13321) wifi:Init static rx mgmt buffer num: 5[0m
+[0;32mI (13321) wifi:Init management short buffer num: 32[0m
+[0;32mI (13331) wifi:Init dynamic tx buffer num: 32[0m
+[0;32mI (13331) wifi:Init static rx buffer size: 1600[0m
+[0;32mI (13341) wifi:Init static rx buffer num: 10[0m
+[0;32mI (13341) wifi:Init dynamic rx buffer num: 32[0m
+[0;32mI (13351) wifi_init: rx ba win: 6[0m
+[0;32mI (13351) wifi_init: accept mbox: 6[0m
+[0;32mI (13351) wifi_init: tcpip mbox: 32[0m
+[0;32mI (13361) wifi_init: udp mbox: 6[0m
+[0;32mI (13361) wifi_init: tcp mbox: 6[0m
+[0;32mI (13361) wifi_init: tcp tx win: 5760[0m
+[0;32mI (13361) wifi_init: tcp rx win: 5760[0m
+[0;32mI (13371) wifi_init: tcp mss: 1440[0m
+[0;32mI (13371) wifi_init: WiFi IRAM OP enabled[0m
+[0;32mI (13371) wifi_init: WiFi RX IRAM OP enabled[0m
+[0;32mI (13381) phy_init: phy_version 4861,b71b5ad,Aug  5 2025,11:16:06[0m
+[0;32mI (13471) wifi:mode : sta (c0:cd:d6:ca:33:fc)[0m
+[0;32mI (13471) wifi:enable tsf[0m
+[0;32mI (13471) TFT_CLOCK: Connecting to WiFi...[0m
+[0;33mW (13481) TFT_CLOCK: System time is invalid, using default time[0m
+[0;32mI (13481) TFT_CLOCK: Attempting to update weather information...[0m
+[0;32mI (13481) WEATHER: Requesting weather from: http://api.seniverse.com/v3/weather/now.json?key=SrqxKpth7Fvzao2Wi&location=hangzhou&language=zh-Hans&unit=c[0m
+[1;31mE (13501) esp-tls: couldn't get hostname for :api.seniverse.com: getaddrinfo() returns 202, addrinfo=0x0[0m
+[1;31mE (13501) transport_base: Failed to open a new connection: 32769[0m
+[1;31mE (13511) HTTP_CLIENT: Connection failed, sock < 0[0m
+[1;31mE (13511) WEATHER: HTTP request failed: ESP_ERR_HTTP_CONNECT[0m
+[0;33mW (13521) TFT_CLOCK: Failed to update weather info, using previous data[0m
+[0;32mI (13521) TFT_CLOCK: Displaying: 00:00:00 2024/01/01 周一 -  ℃[0m
+[0;32mI (13531) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (13881) LCD_DRIVER: Image display completed[0m
+[0;32mI (15101) TFT_CLOCK: 🕒🕒🕒 CURRENT TIME: 2024-01-01 00:00:01 周一 (UTC+8)[0m
+[0;33mW (15101) TFT_CLOCK: System seems stuck, forcing time recovery[0m
+[0;32mI (15101) TFT_CLOCK: Attempting to update weather information...[0m
+[0;32mI (15101) WEATHER: Requesting weather from: http://api.seniverse.com/v3/weather/now.json?key=SrqxKpth7Fvzao2Wi&location=hangzhou&language=zh-Hans&unit=c[0m
+[1;31mE (15121) esp-tls: couldn't get hostname for :api.seniverse.com: getaddrinfo() returns 202, addrinfo=0x0[0m
+[1;31mE (15131) transport_base: Failed to open a new connection: 32769[0m
+[1;31mE (15131) HTTP_CLIENT: Connection failed, sock < 0[0m
+[1;31mE (15141) WEATHER: HTTP request failed: ESP_ERR_HTTP_CONNECT[0m
+[0;33mW (15141) TFT_CLOCK: Failed to update weather info, using previous data[0m
+[0;32mI (15151) TFT_CLOCK: Displaying: 00:00:01 2024/01/01 周一 -  ℃[0m
+[0;32mI (15151) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (15501) LCD_DRIVER: Image display completed[0m
+[0;32mI (15891) wifi:new:<11,0>, old:<1,0>, ap:<255,255>, sta:<11,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (15901) wifi:state: init -> auth (0xb0)[0m
+[0;32mI (15921) wifi:state: auth -> assoc (0x0)[0m
+[0;32mI (15931) wifi:state: assoc -> run (0x10)[0m
+[0;32mI (15951) wifi:connected with ZYUX, aid = 1, channel 11, BW20, bssid = a6:2a:d0:e0:14:d5[0m
+[0;32mI (15951) wifi:security: WPA2-PSK, phy: bgn, rssi: -21[0m
+[0;32mI (15961) wifi:pm start, type: 1[0m
+
+[0;32mI (15961) wifi:dp: 1, bi: 102400, li: 3, scale listen interval from 307200 us to 307200 us[0m
+[0;32mI (15981) wifi:dp: 2, bi: 102400, li: 4, scale listen interval from 307200 us to 409600 us[0m
+[0;32mI (15981) wifi:AP's beacon interval = 102400 us, DTIM period = 2[0m
+[0;32mI (16711) TFT_CLOCK: Attempting to update weather information...[0m
+[0;32mI (16711) WEATHER: Requesting weather from: http://api.seniverse.com/v3/weather/now.json?key=SrqxKpth7Fvzao2Wi&location=hangzhou&language=zh-Hans&unit=c[0m
+[0;32mI (17031) esp_netif_handlers: sta ip: 192.168.17.92, mask: 255.255.255.0, gw: 192.168.17.71[0m
+[0;32mI (17031) TFT_CLOCK: Got IP:192.168.17.92[0m
+[0;32mI (17031) TFT_CLOCK: WiFi RSSI: -19 dBm[0m
+[0;32mI (17061) TFT_CLOCK: DNS resolution successful for pool.ntp.org[0m
+[0;32mI (17061) wifi:<ba-add>idx:0 (ifx:0, a6:2a:d0:e0:14:d5), tid:0, ssn:4, winSize:64[0m
+[0;32mI (17071) TFT_CLOCK: DNS resolution successful for api.seniverse.com[0m
+[0;32mI (17071) TFT_CLOCK: Initializing SNTP[0m
+[0;32mI (17071) TFT_CLOCK: Timezone set to Beijing Time (UTC+8)[0m
+[0;33mW (17171) TFT_CLOCK: SNTP server 1 is invalid, re-setting[0m
+[0;33mW (17171) TFT_CLOCK: SNTP server 2 is invalid, re-setting[0m
+[0;33mW (17171) TFT_CLOCK: SNTP server 3 is invalid, re-setting[0m
+[0;32mI (17171) TFT_CLOCK: SNTP initialized with servers: pool.ntp.org, NULL, NULL, NULL[0m
+[0;32mI (17181) TFT_CLOCK: Current system time before sync: 2024-01-01 08:00:04[0m
+[0;32mI (17181) TFT_CLOCK: Waiting for system time to be set... (1/30)[0m
+[0;32mI (17841) WEATHER: HTTP_EVENT_ON_FINISH[0m
+[0;32mI (17841) WEATHER: HTTP Status: 200[0m
+[0;32mI (17841) WEATHER: Received JSON: {"results":[{"location":{"id":"WTMKQ069CCJ7","name":"杭州","country":"CN","path":"杭州,杭州,浙江,中国","timezone":"Asia/Shanghai","timezone_offset":"+08:00"},"now":{"text":"雾","code":"30","temperature":"14"},"last_update":"2025-11-14T21:25:20+08:00"}]}[0m
+[0;32mI (17861) WEATHER: Weather parsed successfully: 雾, 14[0m
+[0;32mI (17871) TFT_CLOCK: Weather info updated: 雾, 14[0m
+[0;32mI (17871) TFT_CLOCK: Displaying: 00:00:03 2024/01/01 周一 - 雾 14℃[0m
+[0;32mI (17881) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (18241) LCD_DRIVER: Image display completed[0m
+[0;32mI (19191) TFT_CLOCK: Waiting for system time to be set... (2/30)[0m
+[0;32mI (19441) TFT_CLOCK: Displaying: 08:00:06 2024/01/01 周一 - 雾 14℃[0m
+[0;32mI (19441) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (19781) LCD_DRIVER: Image display completed[0m
+[0;32mI (20981) TFT_CLOCK: Displaying: 08:00:07 2024/01/01 周一 - 雾 14℃[0m
+[0;32mI (20981) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (21191) TFT_CLOCK: Waiting for system time to be set... (3/30)[0m
+[0;32mI (21291) TFT_CLOCK: Time synchronization notification received[0m
+[0;32mI (21301) TFT_CLOCK: === SYNCHRONIZED TIME: 2025-11-14 21:39:31 周五 (UTC+8) ===[0m
+[0;32mI (21341) LCD_DRIVER: Image display completed[0m
+[0;32mI (22531) TFT_CLOCK: 🕒🕒🕒 CURRENT TIME: 2025-11-14 21:39:32 周五 (UTC+8)[0m
+[0;32mI (22531) TFT_CLOCK: Attempting to update weather information...[0m
+[0;32mI (22531) WEATHER: Requesting weather from: http://api.seniverse.com/v3/weather/now.json?key=SrqxKpth7Fvzao2Wi&location=hangzhou&language=zh-Hans&unit=c[0m
+[0;32mI (22851) WEATHER: HTTP_EVENT_ON_FINISH[0m
+[0;32mI (22851) WEATHER: HTTP Status: 200[0m
+[0;32mI (22851) WEATHER: Received JSON: {"results":[{"location":{"id":"WTMKQ069CCJ7","name":"杭州","country":"CN","path":"杭州,杭州,浙江,中国","timezone":"Asia/Shanghai","timezone_offset":"+08:00"},"now":{"text":"雾","code":"30","temperature":"14"},"last_update":"2025-11-14T21:25:20+08:00"}]}[0m
+[0;32mI (22871) WEATHER: Weather parsed successfully: 雾, 14[0m
+[0;32mI (22881) TFT_CLOCK: Weather info updated: 雾, 14[0m
+[0;32mI (22881) TFT_CLOCK: Displaying: 21:39:32 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (22891) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (23191) TFT_CLOCK: SNTP synchronization completed successfully[0m
+[0;32mI (23191) WEATHER: Requesting weather from: http://api.seniverse.com/v3/weather/now.json?key=SrqxKpth7Fvzao2Wi&location=hangzhou&language=zh-Hans&unit=c[0m
+[0;32mI (23261) LCD_DRIVER: Image display completed[0m
+[0;32mI (23301) WEATHER: HTTP_EVENT_ON_FINISH[0m
+[0;32mI (23311) WEATHER: HTTP Status: 200[0m
+[0;32mI (23311) WEATHER: Received JSON: {"results":[{"location":{"id":"WTMKQ069CCJ7","name":"杭州","country":"CN","path":"杭州,杭州,浙江,中国","timezone":"Asia/Shanghai","timezone_offset":"+08:00"},"now":{"text":"雾","code":"30","temperature":"14"},"last_update":"2025-11-14T21:25:20+08:00"}]}[0m
+[0;32mI (23331) WEATHER: Weather parsed successfully: 雾, 14[0m
+[0;32mI (23331) TFT_CLOCK: Weather info obtained: 雾, 14[0m
+[0;32mI (24481) TFT_CLOCK: Displaying: 21:39:34 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (24481) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (24821) LCD_DRIVER: Image display completed[0m
+[0;32mI (26031) TFT_CLOCK: Displaying: 21:39:35 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (26031) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (26371) LCD_DRIVER: Image display completed[0m
+[0;32mI (27581) TFT_CLOCK: Displaying: 21:39:37 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (27581) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (27921) LCD_DRIVER: Image display completed[0m
+[0;32mI (29131) TFT_CLOCK: Displaying: 21:39:39 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (29131) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (29471) LCD_DRIVER: Image display completed[0m
+[0;32mI (30681) TFT_CLOCK: Displaying: 21:39:40 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (30681) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (31021) LCD_DRIVER: Image display completed[0m
+[0;32mI (32231) TFT_CLOCK: Displaying: 21:39:42 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (32231) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (32571) LCD_DRIVER: Image display completed[0m
+[0;32mI (33781) TFT_CLOCK: Displaying: 21:39:43 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (33781) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (34121) LCD_DRIVER: Image display completed[0m
+[0;32mI (35331) TFT_CLOCK: Displaying: 21:39:45 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (35331) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (35671) LCD_DRIVER: Image display completed[0m
+[0;32mI (36881) TFT_CLOCK: Displaying: 21:39:46 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (36881) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (37221) LCD_DRIVER: Image display completed[0m
+[0;32mI (38431) TFT_CLOCK: Displaying: 21:39:48 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (38431) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (38771) LCD_DRIVER: Image display completed[0m
+[0;32mI (39981) TFT_CLOCK: Displaying: 21:39:49 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (39981) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (40321) LCD_DRIVER: Image display completed[0m
+[0;32mI (41531) TFT_CLOCK: Displaying: 21:39:51 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (41531) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (41871) LCD_DRIVER: Image display completed[0m
+[0;32mI (43081) TFT_CLOCK: Displaying: 21:39:52 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (43081) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (43421) LCD_DRIVER: Image display completed[0m
+[0;32mI (44631) TFT_CLOCK: Displaying: 21:39:54 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (44631) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (44971) LCD_DRIVER: Image display completed[0m
+[0;32mI (46181) TFT_CLOCK: Displaying: 21:39:56 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (46181) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (46521) LCD_DRIVER: Image display completed[0m
+[0;32mI (47731) TFT_CLOCK: Displaying: 21:39:57 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (47731) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (48071) LCD_DRIVER: Image display completed[0m
+[0;32mI (49281) TFT_CLOCK: Displaying: 21:39:59 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (49281) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (49621) LCD_DRIVER: Image display completed[0m
+[0;32mI (50831) TFT_CLOCK: Displaying: 21:40:00 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (50831) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (51171) LCD_DRIVER: Image display completed[0m
+[0;32mI (51411) TFT_CLOCK: Time synchronization notification received[0m
+[0;32mI (51411) TFT_CLOCK: === SYNCHRONIZED TIME: 2025-11-14 21:40:01 周五 (UTC+8) ===[0m
+[0;32mI (52391) TFT_CLOCK: Displaying: 21:40:02 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (52391) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (52731) LCD_DRIVER: Image display completed[0m
+[0;32mI (53941) TFT_CLOCK: Displaying: 21:40:03 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (53941) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (54281) LCD_DRIVER: Image display completed[0m
+[0;32mI (55491) TFT_CLOCK: Displaying: 21:40:05 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (55491) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (55831) LCD_DRIVER: Image display completed[0m
+[0;32mI (57041) TFT_CLOCK: Displaying: 21:40:06 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (57041) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (57381) LCD_DRIVER: Image display completed[0m
+[0;32mI (58591) TFT_CLOCK: Displaying: 21:40:08 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (58591) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (58931) LCD_DRIVER: Image display completed[0m
+[0;32mI (60141) TFT_CLOCK: Displaying: 21:40:09 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (60141) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (60481) LCD_DRIVER: Image display completed[0m
+[0;32mI (61691) TFT_CLOCK: Displaying: 21:40:11 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (61691) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (62031) LCD_DRIVER: Image display completed[0m
+[0;32mI (63241) TFT_CLOCK: Displaying: 21:40:13 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (63241) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (63581) LCD_DRIVER: Image display completed[0m
+[0;32mI (64791) TFT_CLOCK: Displaying: 21:40:14 2025/11/14 周五 - 雾 14℃[0m
+[0;32mI (64791) LCD_DRIVER: Drawing image at (0,0) size 128x128 with offsets x=2, y=3[0m
+[0;32mI (65131) LCD_DRIVER: Image display completed[0m

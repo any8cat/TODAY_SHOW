@@ -302,10 +302,26 @@ void display_current_time(void)
     time(&now);
     localtime_r(&now, &timeinfo);
     
-    ESP_LOGI(TAG, "🕒 CURRENT TIME: %04d-%02d-%02d %02d:%02d:%02d %s (UTC+8)",
+    ESP_LOGI(TAG, "🕒🕒🕒 CURRENT TIME: %04d-%02d-%02d %02d:%02d:%02d %s (UTC+8)",
              timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday,
              timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec,
              weekDays[timeinfo.tm_wday]);
+}
+
+// 确保字符显示的函数
+void safe_draw_string(lcd_display_t *lcd, uint16_t x, uint16_t y, const char *str, font_t *font, uint16_t color)
+{
+    if (lcd == NULL || str == NULL || font == NULL) {
+        ESP_LOGE(TAG, "Invalid parameters in safe_draw_string");
+        return;
+    }
+    
+    // 设置字体和颜色
+    lcd_set_font(lcd, font);
+    lcd_set_text_color(lcd, color);
+    
+    // 绘制字符串
+    lcd_draw_string(lcd, x, y, str);
 }
 
 void show_info_on_image(lcd_display_t *lcd, 
@@ -320,13 +336,13 @@ void show_info_on_image(lcd_display_t *lcd,
     }    
 
     // 显示当前时间到日志（用于调试）
-    ESP_LOGI(TAG, "Displaying: %02d:%02d:%02d %04d/%02d/%02d %s - %s %s°C",
+    ESP_LOGI(TAG, "Displaying: %02d:%02d:%02d %04d/%02d/%02d %s - %s %s℃",
              hour, minute, second, year, month, day, week, weather, temperature);
     
     // 1. 首先绘制背景图片（雷神图片）
     lcd_draw_image(lcd, 0, 0, 128, 128, thunderGod);
     
-    // 2. 左上角显示地点
+    // 2. 左上角显示地点 - 使用自定义字体显示汉字
     lcd_set_custom_font(lcd, show_custom_font);
     lcd_set_text_color(lcd, COLOR_WHITE);
     lcd_draw_custom_string(lcd, 5, 5, address);
@@ -349,25 +365,32 @@ void show_info_on_image(lcd_display_t *lcd,
     
     int weatherCharCount = strlen(display_weather) / 3; // 中文字符数
     
+    // 修复：统一使用自定义字体显示天气汉字
+    lcd_set_custom_font(lcd, show_custom_font);
+    lcd_set_text_color(lcd, COLOR_WHITE);
+    
     if (weatherCharCount <= 2) {
         // 短天气描述
         lcd_draw_custom_string(lcd, weatherX + 16, weatherY, display_weather);
         
-        // 显示温度
-        lcd_set_font(lcd, &font_large);
+        // 修复：温度显示使用标准字体，设置正确的字体
+        lcd_set_font_size(lcd, FONT_SIZE_SMALL);
         lcd_set_text_color(lcd, COLOR_CYAN);
-        int tempX = weatherX + weatherCharCount * 16 + 16;
-        lcd_draw_string(lcd, tempX, weatherY + 6, display_temperature);
+        char temp_str[16];
+        snprintf(temp_str, sizeof(temp_str), "%s", display_temperature);
+        lcd_draw_string(lcd, weatherX + weatherCharCount * 16 + 16, weatherY + 6, temp_str);
     } 
     else if (weatherCharCount <= 4) {
         // 中等长度天气描述
         lcd_draw_custom_string(lcd, weatherX, weatherY, display_weather);
         
         // 温度显示在天气下方
-        lcd_set_font(lcd, &font_large);
+        lcd_set_font_size(lcd, FONT_SIZE_SMALL);
         lcd_set_text_color(lcd, COLOR_CYAN);
+        char temp_str[16];
+        snprintf(temp_str, sizeof(temp_str), "%s", display_temperature);
         int tempY = weatherY + 16;
-        lcd_draw_string(lcd, weatherX + 16, tempY + 6, display_temperature);
+        lcd_draw_string(lcd, weatherX + 16, tempY + 6, temp_str);
     }
     else {
         // 长天气描述，截断显示
@@ -379,10 +402,13 @@ void show_info_on_image(lcd_display_t *lcd,
         
         lcd_draw_custom_string(lcd, weatherX, weatherY, shortWeather);
         
-        lcd_set_font(lcd, &font_large);
+        // 温度显示在天气下方
+        lcd_set_font_size(lcd, FONT_SIZE_SMALL);
         lcd_set_text_color(lcd, COLOR_CYAN);
+        char temp_str[16];
+        snprintf(temp_str, sizeof(temp_str), "%s", display_temperature);
         int tempY = weatherY + 16;
-        lcd_draw_string(lcd, weatherX + 16, tempY + 6, display_temperature);
+        lcd_draw_string(lcd, weatherX + 16, tempY + 6, temp_str);
     }
     
     // 4. 中间偏下显示时间
@@ -392,39 +418,80 @@ void show_info_on_image(lcd_display_t *lcd,
     char timeHM[6];
     snprintf(timeHM, sizeof(timeHM), "%02d:%02d", hour, minute);
     
-    lcd_set_font(lcd, &font_xlarge);
+    // 修复：使用大字体显示时间，确保字体设置正确
+    lcd_set_font_size(lcd, FONT_SIZE_LARGE);
     lcd_set_text_color(lcd, COLOR_WHITE);
     lcd_draw_string(lcd, timeX, timeY, timeHM);
     
     // 5. 显示秒数
-    lcd_set_font(lcd, &font_standard);
+    char secStr[4];
     int secondX = timeX + 64;
     int secondY = timeY + 24;
     
     if (secondX + 20 < 128) {
-        char secStr[4];
         snprintf(secStr, sizeof(secStr), ":%02d", second);
-        lcd_draw_string(lcd, secondX, secondY, secStr);
     } else {
-        char secStr[3];
         snprintf(secStr, sizeof(secStr), "%02d", second);
-        lcd_draw_string(lcd, secondX, secondY, secStr);
     }
+    
+    // 修复：秒数使用标准字体
+    lcd_set_font_size(lcd, FONT_SIZE_SMALL);
+    lcd_set_text_color(lcd, COLOR_WHITE);
+    lcd_draw_string(lcd, secondX, secondY, secStr);
     
     // 6. 显示日期和星期
     char dateStr[12];
     snprintf(dateStr, sizeof(dateStr), "%02d/%02d", month, day);
     
-    lcd_set_font(lcd, &font_standard);
+    // 修复：日期使用标准字体
+    lcd_set_font_size(lcd, FONT_SIZE_SMALL);
+    lcd_set_text_color(lcd, COLOR_WHITE);
     lcd_draw_string(lcd, timeX + 6, timeY + 26, dateStr);
     
-    // 显示星期
+    // 修复：星期使用自定义字体显示汉字
+    lcd_set_custom_font(lcd, show_custom_font);
+    lcd_set_text_color(lcd, COLOR_WHITE);
     lcd_draw_custom_string(lcd, timeX + 6 * 6, timeY + 30, week);
+    
+    // 强制刷新显示
+    vTaskDelay(10 / portTICK_PERIOD_MS);
+}
+
+void test_font_display(lcd_display_t *lcd)
+{
+    if (lcd == NULL) return;
+    
+    // 清屏
+    lcd_fill_screen(lcd, COLOR_BLACK);
+    
+    // 测试小字体
+    lcd_set_font_size(lcd, FONT_SIZE_SMALL);
+    lcd_set_text_color(lcd, COLOR_WHITE);
+    lcd_draw_string(lcd, 10, 10, "Small: 012ABCabc");
+    
+    // 测试中字体
+    lcd_set_font_size(lcd, FONT_SIZE_MEDIUM);
+    lcd_set_text_color(lcd, COLOR_GREEN);
+    lcd_draw_string(lcd, 10, 30, "Medium: 456DEFdef");
+    
+    // 测试大字体
+    lcd_set_font_size(lcd, FONT_SIZE_LARGE);
+    lcd_set_text_color(lcd, COLOR_BLUE);
+    lcd_draw_string(lcd, 10, 50, "Large: 789GHIghi");
+    
+    // 测试特殊字符
+    lcd_set_font_size(lcd, FONT_SIZE_SMALL);
+    lcd_set_text_color(lcd, COLOR_RED);
+    lcd_draw_string(lcd, 10, 80, "Special: +-*/=<>?");
+    
+    vTaskDelay(3000 / portTICK_PERIOD_MS);
 }
 
 void app_main(void)
 {
     ESP_LOGI(TAG, "Starting TFT Clock Application");
+    
+    lcd_validate_fonts();
     
     // 初始化NVS
     esp_err_t ret = nvs_flash_init();
@@ -463,6 +530,8 @@ void app_main(void)
     // 清屏
     lcd_fill_screen(&g_lcd, COLOR_BLACK);
     
+    test_font_display(&g_lcd);
+    
     // 测试：显示纯色背景
     ESP_LOGI(TAG, "Testing with solid colors...");
     lcd_fill_screen(&g_lcd, COLOR_RED);
@@ -478,10 +547,8 @@ void app_main(void)
     lcd_draw_image(&g_lcd, 0, 0, 128, 128, thunderGod);
     vTaskDelay(3000 / portTICK_PERIOD_MS);
     
-    // 显示连接中信息
-    lcd_set_font(&g_lcd, &font_standard);
-    lcd_set_text_color(&g_lcd, COLOR_WHITE);
-    lcd_draw_string(&g_lcd, 10, 40, "WiFi Connecting");
+    // 显示连接中信息 - 使用安全绘制函数
+    safe_draw_string(&g_lcd, 10, 40, "WiFi Connecting", &font_standard, COLOR_WHITE);
     
     // 初始化WiFi和网络事件
     ESP_ERROR_CHECK(esp_netif_init());

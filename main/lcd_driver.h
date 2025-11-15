@@ -13,6 +13,7 @@
 #define COLOR_BLUE    0x001F
 #define COLOR_CYAN    0x07FF
 #define COLOR_YELLOW  0xFFE0
+#define COLOR_MAGENTA 0xF81F
 
 // ST7735_GREENTAB3 偏移量定义
 #define ST7735_GREENTAB3_X_OFFSET 2
@@ -24,6 +25,14 @@ typedef struct {
     uint8_t height;
     const uint8_t *data;
 } font_t;
+
+// 字体大小枚举
+typedef enum {
+    FONT_SIZE_SMALL = 0,
+    FONT_SIZE_MEDIUM,
+    FONT_SIZE_LARGE,
+    FONT_SIZE_XLARGE
+} font_size_t;
 
 // LCD配置结构体
 typedef struct {
@@ -56,8 +65,9 @@ typedef struct {
     uint8_t y_offset;
 } lcd_display_t;
 
-// 字体变量声明（新增）
+// 字体变量声明
 extern font_t font_standard;
+extern font_t font_medium;
 extern font_t font_large;
 extern font_t font_xlarge;
 
@@ -73,8 +83,14 @@ void lcd_draw_char(lcd_display_t *lcd, uint16_t x, uint16_t y, char c);
 void lcd_draw_string(lcd_display_t *lcd, uint16_t x, uint16_t y, const char *str);
 void lcd_draw_custom_string(lcd_display_t *lcd, uint16_t x, uint16_t y, const char *str);
 void lcd_set_font(lcd_display_t *lcd, font_t *font);
+void lcd_set_font_size(lcd_display_t *lcd, font_size_t size); // 新增函数
 void lcd_set_text_color(lcd_display_t *lcd, uint16_t color);
+void lcd_set_bg_color(lcd_display_t *lcd, uint16_t color); // 新增函数
 void lcd_set_custom_font(lcd_display_t *lcd, void (*draw_func)(int x, int y, const char* str, uint16_t color));
 void lcd_draw_image(lcd_display_t *lcd, int x, int y, int width, int height, const uint16_t *image);
+void lcd_validate_fonts(void);
+
+// 新增：获取字符串宽度（用于布局计算）
+uint16_t lcd_get_string_width(lcd_display_t *lcd, const char *str);
 
 #endif // LCD_DRIVER_H
