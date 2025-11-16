@@ -31,7 +31,7 @@ typedef enum {
     FONT_SIZE_SMALL = 0,
     FONT_SIZE_MEDIUM,
     FONT_SIZE_LARGE,
-    FONT_SIZE_XLARGE
+    FONT_SIZE_XSMALL
 } font_size_t;
 
 // LCD配置结构体
@@ -69,7 +69,7 @@ typedef struct {
 extern font_t font_standard;
 extern font_t font_medium;
 extern font_t font_large;
-extern font_t font_xlarge;
+extern font_t font_xstandard;
 
 // 函数声明
 esp_err_t lcd_init(lcd_display_t *lcd, const lcd_config_t *config);
