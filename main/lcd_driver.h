@@ -34,6 +34,15 @@ typedef enum {
     FONT_SIZE_XSMALL
 } font_size_t;
 
+// 显示区域结构体（用于局部刷新）
+typedef struct {
+    uint16_t x;           // 区域X坐标
+    uint16_t y;           // 区域Y坐标
+    uint16_t width;       // 区域宽度
+    uint16_t height;      // 区域高度
+    uint16_t *buffer;     // 背景缓存数据
+} text_area_bg_t;
+
 // LCD配置结构体
 typedef struct {
     int miso_io_num;
@@ -90,7 +99,11 @@ void lcd_set_custom_font(lcd_display_t *lcd, void (*draw_func)(int x, int y, con
 void lcd_draw_image(lcd_display_t *lcd, int x, int y, int width, int height, const uint16_t *image);
 void lcd_validate_fonts(void);
 
-// 新增：获取字符串宽度（用于布局计算）
+// 获取字符串宽度（用于布局计算）
 uint16_t lcd_get_string_width(lcd_display_t *lcd, const char *str);
+
+text_area_bg_t* lcd_init_text_area(lcd_display_t *lcd, uint16_t x, uint16_t y, uint16_t width, uint16_t height);
+esp_err_t lcd_save_text_area_bg(lcd_display_t *lcd, text_area_bg_t *area);
+esp_err_t lcd_restore_text_area_bg(lcd_display_t *lcd, text_area_bg_t *area);
 
 #endif // LCD_DRIVER_H

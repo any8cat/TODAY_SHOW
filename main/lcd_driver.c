@@ -5,6 +5,7 @@
 #include "driver/gpio.h"
 #include "driver/spi_master.h"
 #include "esp_heap_caps.h"
+#include "fonts.h"
 
 static const char *TAG = "LCD_DRIVER";
 
@@ -20,6 +21,7 @@ static const char *TAG = "LCD_DRIVER";
 #define ST7735_CASET   0x2A
 #define ST7735_RASET   0x2B
 #define ST7735_RAMWR   0x2C
+#define ST7735_RAMRD   0x2E // 读RAM命令
 #define ST7735_MADCTL  0x36
 #define ST7735_COLMOD  0x3A
 #define ST7735_FRMCTR1 0xB1
@@ -1605,8 +1607,12 @@ void lcd_send_data(lcd_display_t *lcd, uint8_t data)
     }
 }
 
-void lcd_set_window(lcd_display_t *lcd, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
-{
+void lcd_set_window(lcd_display_t *lcd, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+    if (lcd == NULL) {
+        ESP_LOGE(TAG, "LCD is NULL in lcd_set_window");
+        return;
+    }
+    
     // 应用GREENTAB3偏移量
     x0 += lcd->x_offset;
     x1 += lcd->x_offset;
@@ -1616,6 +1622,8 @@ void lcd_set_window(lcd_display_t *lcd, uint16_t x0, uint16_t y0, uint16_t x1, u
     // 确保坐标在有效范围内
     if (x1 >= lcd->width + lcd->x_offset) x1 = lcd->width + lcd->x_offset - 1;
     if (y1 >= lcd->height + lcd->y_offset) y1 = lcd->height + lcd->y_offset - 1;
+    
+//    ESP_LOGI(TAG, "Setting window: (%d,%d) to (%d,%d)", x0, y0, x1, y1);
     
     lcd_send_command(lcd, ST7735_CASET);
     lcd_send_data(lcd, x0 >> 8);
@@ -1900,3 +1908,274 @@ void lcd_draw_image(lcd_display_t *lcd, int x, int y, int width, int height, con
     
     ESP_LOGI(TAG, "Image display completed");
 }
+
+esp_err_t lcd_save_text_area_bg(lcd_display_t *lcd, text_area_bg_t *area) {
+    if (lcd == NULL || area == NULL || area->buffer == NULL) {
+        ESP_LOGE(TAG, "Invalid parameters in lcd_save_text_area_bg");
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    ESP_LOGI(TAG, "Saving background from image data: %dx%d at (%d,%d)", 
+             area->width, area->height, area->x, area->y);
+
+    // 直接从背景图片数组复制数据，避免SPI读取
+    for (uint16_t y = 0; y < area->height; y++) {
+        for (uint16_t x = 0; x < area->width; x++) {
+            uint16_t screen_x = area->x + x;
+            uint16_t screen_y = area->y + y;
+            
+            if (screen_x < 128 && screen_y < 128) {
+                uint32_t index = screen_y * 128 + screen_x;
+                if (index < 128 * 128) {
+                    area->buffer[y * area->width + x] = thunderGod[index];
+                } else {
+                    area->buffer[y * area->width + x] = COLOR_BLACK;
+                }
+            } else {
+                area->buffer[y * area->width + x] = COLOR_BLACK;
+            }
+        }
+    }
+    
+    ESP_LOGI(TAG, "Background saved successfully from image data");
+    return ESP_OK;
+}
+
+esp_err_t lcd_restore_text_area_bg(lcd_display_t *lcd, text_area_bg_t *area) {
+    if (lcd == NULL || area == NULL || area->buffer == NULL) {
+        ESP_LOGE(TAG, "Invalid parameters in lcd_restore_text_area_bg");
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    ESP_LOGI(TAG, "Restoring background: %dx%d at (%d,%d)", 
+             area->width, area->height, area->x, area->y);
+
+    // 设置显示窗口
+    lcd_set_window(lcd, area->x, area->y, area->x + area->width - 1, area->y + area->height - 1);
+    
+    ESP_LOGI(TAG, "Window set completed, acquiring SPI mutex...");
+    
+    // 尝试获取互斥锁，设置超时时间
+    if (xSemaphoreTake(lcd->spi_mutex, pdMS_TO_TICKS(5000)) == pdTRUE) {
+        esp_err_t ret = ESP_OK;
+        
+        ESP_LOGI(TAG, "SPI mutex acquired, sending RAMWR command...");
+        
+        // 使用更简单的方法发送RAMWR命令
+        spi_transaction_t t_cmd = {
+            .length = 8,
+            .tx_buffer = (uint8_t[]){ST7735_RAMWR},
+            .user = (void *)lcd,
+            .cmd = 0, // DC线为0表示命令
+        };
+        
+        ret = spi_device_polling_transmit(lcd->spi, &t_cmd);
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to send RAMWR command: %s", esp_err_to_name(ret));
+            xSemaphoreGive(lcd->spi_mutex);
+            return ret;
+        }
+        
+        ESP_LOGI(TAG, "RAMWR command sent successfully, sending pixel data...");
+        
+        // 发送像素数据 - 使用更简单的方法，逐像素发送
+        uint32_t pixel_count = area->width * area->height;
+        ESP_LOGI(TAG, "Sending %lu pixels...", pixel_count);
+        
+        for (uint32_t i = 0; i < pixel_count; i++) {
+            uint16_t color = area->buffer[i];
+            uint8_t color_high = color >> 8;
+            uint8_t color_low = color & 0xFF;
+            
+            // 发送高字节
+            spi_transaction_t t_high = {
+                .length = 8,
+                .tx_buffer = &color_high,
+                .user = (void *)lcd,
+                .cmd = 1, // DC线为1表示数据
+            };
+            
+            ret = spi_device_polling_transmit(lcd->spi, &t_high);
+            if (ret != ESP_OK) {
+                ESP_LOGE(TAG, "Failed to send high byte at index %lu: %s", i, esp_err_to_name(ret));
+                break;
+            }
+            
+            // 发送低字节
+            spi_transaction_t t_low = {
+                .length = 8,
+                .tx_buffer = &color_low,
+                .user = (void *)lcd,
+                .cmd = 1, // DC线为1表示数据
+            };
+            
+            ret = spi_device_polling_transmit(lcd->spi, &t_low);
+            if (ret != ESP_OK) {
+                ESP_LOGE(TAG, "Failed to send low byte at index %lu: %s", i, esp_err_to_name(ret));
+                break;
+            }
+            
+            // 每发送100个像素添加一个延迟，避免SPI过载
+            if (i % 100 == 0) {
+                vTaskDelay(1 / portTICK_PERIOD_MS);
+            }
+        }
+        
+        xSemaphoreGive(lcd->spi_mutex);
+        
+        if (ret == ESP_OK) {
+            ESP_LOGI(TAG, "Background restored successfully, sent %lu pixels", pixel_count);
+        } else {
+            ESP_LOGE(TAG, "Failed to restore background after %lu pixels", pixel_count);
+        }
+        
+        return ret;
+    } else {
+        ESP_LOGE(TAG, "Failed to acquire SPI mutex within 5 second timeout");
+        return ESP_ERR_TIMEOUT;
+    }
+}
+
+text_area_bg_t* lcd_init_text_area(lcd_display_t *lcd, uint16_t x, uint16_t y, uint16_t width, uint16_t height) {
+    if (lcd == NULL || x >= lcd->width || y >= lcd->height || width == 0 || height == 0) {
+        ESP_LOGE(TAG, "Invalid text area parameters");
+        return NULL;
+    }
+
+    // 确保区域在屏幕范围内
+    uint16_t adj_width = width;
+    uint16_t adj_height = height;
+    if (x + adj_width > lcd->width) adj_width = lcd->width - x;
+    if (y + adj_height > lcd->height) adj_height = lcd->height - y;
+
+    // 分配内存
+    text_area_bg_t *area = (text_area_bg_t*)malloc(sizeof(text_area_bg_t));
+    if (area == NULL) {
+        ESP_LOGE(TAG, "Failed to allocate memory for text area");
+        return NULL;
+    }
+
+    area->x = x;
+    area->y = y;
+    area->width = adj_width;
+    area->height = adj_height;
+    area->buffer = (uint16_t*)malloc(adj_width * adj_height * sizeof(uint16_t));
+    
+    if (area->buffer == NULL) {
+        ESP_LOGE(TAG, "Failed to allocate memory for text area buffer");
+        free(area);
+        return NULL;
+    }
+
+    return area;
+}
+
+// esp_err_t lcd_save_text_area_bg(lcd_display_t *lcd, text_area_bg_t *area) {
+//     if (lcd == NULL || area == NULL || area->buffer == NULL) {
+//         return ESP_ERR_INVALID_ARG;
+//     }
+
+//     // 设置读取窗口
+//     lcd_set_window(lcd, area->x, area->y, area->x + area->width - 1, area->y + area->height - 1);
+    
+//     if (xSemaphoreTake(lcd->spi_mutex, portMAX_DELAY) == pdTRUE) {
+//         esp_err_t ret = ESP_OK;
+        
+//         // 发送读数据命令 (0x2E)
+//         spi_transaction_t t_cmd = {
+//             .length = 8,
+//             .tx_buffer = (uint8_t[]){ST7735_RAMRD},
+//             .user = (void *)lcd,
+//             .cmd = 0, // DC线为0表示命令
+//         };
+//         ret = spi_device_polling_transmit(lcd->spi, &t_cmd);
+//         if (ret != ESP_OK) {
+//             ESP_LOGE(TAG, "Failed to send read command");
+//             xSemaphoreGive(lcd->spi_mutex);
+//             return ret;
+//         }
+
+//         // 计算需要读取的字节数 (每个像素2字节)
+//         uint32_t pixel_count = area->width * area->height;
+//         uint32_t byte_length = pixel_count * 2;
+        
+//         // 分配dummy发送缓冲区
+//         uint8_t *dummy_tx = heap_caps_malloc(byte_length, MALLOC_CAP_DMA);
+//         if (dummy_tx == NULL) {
+//             ESP_LOGE(TAG, "Failed to allocate dummy buffer");
+//             xSemaphoreGive(lcd->spi_mutex);
+//             return ESP_ERR_NO_MEM;
+//         }
+//         memset(dummy_tx, 0, byte_length); // 填充0作为dummy数据
+
+//         // 读取像素数据
+//         spi_transaction_t t_data = {
+//             .length = byte_length * 8, // 比特数
+//             .tx_buffer = dummy_tx,
+//             .rx_buffer = area->buffer,
+//             .user = (void *)lcd,
+//             .cmd = 1, // DC线为1表示数据
+//         };
+        
+//         ret = spi_device_polling_transmit(lcd->spi, &t_data);
+//         if (ret != ESP_OK) {
+//             ESP_LOGE(TAG, "Failed to read pixel data");
+//         }
+        
+//         // 释放dummy缓冲区
+//         free(dummy_tx);
+//         xSemaphoreGive(lcd->spi_mutex);
+        
+//         return ret;
+//     }
+    
+//     return ESP_FAIL;
+// }
+
+// esp_err_t lcd_restore_text_area_bg(lcd_display_t *lcd, text_area_bg_t *area) {
+//     if (lcd == NULL || area == NULL || area->buffer == NULL) {
+//         return ESP_ERR_INVALID_ARG;
+//     }
+
+//     // 设置显示窗口
+//     lcd_set_window(lcd, area->x, area->y, area->x + area->width - 1, area->y + area->height - 1);
+    
+//     if (xSemaphoreTake(lcd->spi_mutex, portMAX_DELAY) == pdTRUE) {
+//         esp_err_t ret = ESP_OK;
+        
+//         // 发送写RAM命令 (0x2C)
+//         spi_transaction_t t_cmd = {
+//             .length = 8,
+//             .tx_buffer = (uint8_t[]){ST7735_RAMWR},
+//             .user = (void *)lcd,
+//             .cmd = 0, // DC线为0表示命令
+//         };
+//         ret = spi_device_polling_transmit(lcd->spi, &t_cmd);
+//         if (ret != ESP_OK) {
+//             ESP_LOGE(TAG, "Failed to send write command");
+//             xSemaphoreGive(lcd->spi_mutex);
+//             return ret;
+//         }
+
+//         // 发送像素数据
+//         uint32_t pixel_count = area->width * area->height;
+//         for (uint32_t i = 0; i < pixel_count; i++) {
+//             spi_transaction_t t_data = {
+//                 .length = 16, // 每个像素16位
+//                 .tx_buffer = &area->buffer[i],
+//                 .user = (void *)lcd,
+//                 .cmd = 1, // DC线为1表示数据
+//             };
+//             ret = spi_device_polling_transmit(lcd->spi, &t_data);
+//             if (ret != ESP_OK) {
+//                 ESP_LOGE(TAG, "Failed to send pixel data at index %lu", i);
+//                 break;
+//             }
+//         }
+        
+//         xSemaphoreGive(lcd->spi_mutex);
+//         return ret;
+//     }
+    
+//     return ESP_FAIL;
+// }
