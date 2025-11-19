@@ -1013,12 +1013,12 @@ void app_main(void)
 
     // 初始化LCD
     lcd_config_t lcd_config = {
-        .miso_io_num = 19,
-        .mosi_io_num = 23,
-        .sclk_io_num = 18,
-        .cs_io_num = 27,
-        .dc_io_num = 25,
-        .rst_io_num = 26,
+        .miso_io_num = 11,
+        .mosi_io_num = 13,
+        .sclk_io_num = 12,
+        .cs_io_num = 10,
+        .dc_io_num = 9,
+        .rst_io_num = 8,
         .spi_freq_hz = 27000000,
         .width = 128,
         .height = 128,

@@ -1417,6 +1417,7 @@ esp_err_t lcd_init(lcd_display_t *lcd, const lcd_config_t *config)
         .quadwp_io_num = -1,
         .quadhd_io_num = -1,
         .max_transfer_sz = 128 * 128 * 2 + 8,
+        .flags = 0,  // 添加flags字段
     };
     
     ret = spi_bus_initialize(SPI2_HOST, &buscfg, SPI_DMA_CH_AUTO);

@@ -11,6 +11,9 @@ D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/CMakeFiles/bootloader.elf
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/CMakeFiles/size.dir
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/CMakeFiles/size-files.dir
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/CMakeFiles/size-components.dir
+D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/CMakeFiles/dfu.dir
+D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/CMakeFiles/dfu-list.dir
+D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/CMakeFiles/dfu-flash.dir
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/CMakeFiles/uf2.dir
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/CMakeFiles/uf2-app.dir
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/CMakeFiles/edit_cache.dir
@@ -60,8 +63,10 @@ D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/esp-idf/esp_system/CMakeF
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/esp-idf/esp_hw_support/CMakeFiles/__idf_esp_hw_support.dir
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/esp-idf/esp_hw_support/CMakeFiles/edit_cache.dir
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/esp-idf/esp_hw_support/CMakeFiles/rebuild_cache.dir
-D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/esp-idf/esp_hw_support/port/esp32/CMakeFiles/edit_cache.dir
-D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/esp-idf/esp_hw_support/port/esp32/CMakeFiles/rebuild_cache.dir
+D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/esp-idf/esp_hw_support/port/esp32s3/CMakeFiles/edit_cache.dir
+D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/esp-idf/esp_hw_support/port/esp32s3/CMakeFiles/rebuild_cache.dir
+D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/esp-idf/esp_hw_support/mspi_timing_tuning/port/esp32s3/CMakeFiles/edit_cache.dir
+D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/esp-idf/esp_hw_support/mspi_timing_tuning/port/esp32s3/CMakeFiles/rebuild_cache.dir
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/esp-idf/esp_hw_support/lowpower/CMakeFiles/edit_cache.dir
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/esp-idf/esp_hw_support/lowpower/CMakeFiles/rebuild_cache.dir
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/esp-idf/esp_common/CMakeFiles/__idf_esp_common.dir

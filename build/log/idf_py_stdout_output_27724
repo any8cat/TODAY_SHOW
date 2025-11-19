@@ -1,0 +1,80 @@
+Command: ninja flash
+[1/5] C:\Windows\system32\cmd.exe /C "cd /D D:\ESP32\esp32-idf-project\TODAY_SHOW\build\esp-idf\esptool_py && D:\ESP32\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe D:/ESP32/v5.5.1/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app D:/ESP32/esp32-idf-project/TODAY_SHOW/build/partition_table/partition-table.bin D:/ESP32/esp32-idf-project/TODAY_SHOW/build/TODAY_SHOW.bin"
+TODAY_SHOW.bin binary size 0xf60e0 bytes. Smallest app partition is 0x100000 bytes. 0x9f20 bytes (4%) free.
+Warning: The smallest app partition is nearly full (4% free space left)!
+[2/5] Performing build step for 'bootloader'
+[1/1] C:\Windows\system32\cmd.exe /C "cd /D D:\ESP32\esp32-idf-project\TODAY_SHOW\build\bootloader\esp-idf\esptool_py && D:\ESP32\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe D:/ESP32/v5.5.1/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x0 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/bootloader.bin"
+Bootloader binary size 0x5240 bytes. 0x2dc0 bytes (36%) free.
+[3/5] No install step for 'bootloader'
+[4/5] Completed 'bootloader'
+[4/5] C:\Windows\system32\cmd.exe /C "cd /D D:\ESP32\v5.5.1\esp-idf\components\esptool_py && D:\ESP32\Espressif\tools\cmake\3.30.2\bin\cmake.exe -D IDF_PATH=D:/ESP32/v5.5.1/esp-idf -D SERIAL_TOOL=D:/ESP32/Espressif/python_env/idf5.5_py3.11_env/Scripts/python.exe;;D:/ESP32/v5.5.1/esp-idf/components/esptool_py/esptool/esptool.py;--chip;esp32s3 -D SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@flash_args -D WORKING_DIRECTORY=D:/ESP32/esp32-idf-project/TODAY_SHOW/build -P D:/ESP32/v5.5.1/esp-idf/components/esptool_py/run_serial_tool.cmake"
+esptool.py --chip esp32s3 -p COM43 -b 460800 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 2MB 0x0 bootloader/bootloader.bin 0x10000 TODAY_SHOW.bin 0x8000 partition_table/partition-table.bin
+esptool.py v4.10.0
+Serial port COM43
+Connecting....
+Chip is ESP32-S3 (QFN56) (revision v0.2)
+Features: WiFi, BLE, Embedded PSRAM 8MB (AP_3v3)
+Crystal is 40MHz
+MAC: dc:b4:d9:14:58:30
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00000000 to 0x00005fff...
+Flash will be erased from 0x00010000 to 0x00106fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+SHA digest in image updated
+Compressed 21056 bytes to 13390...
+Writing at 0x00000000... (100 %)
+Wrote 21056 bytes (13390 compressed) at 0x00000000 in 0.6 seconds (effective 261.6 kbit/s)...
+Hash of data verified.
+Compressed 1007840 bytes to 620481...
+Writing at 0x00010000... (2 %)
+Writing at 0x0001cac8... (5 %)
+Writing at 0x00028a04... (7 %)
+Writing at 0x0002e28e... (10 %)
+Writing at 0x00036104... (13 %)
+Writing at 0x00041118... (15 %)
+Writing at 0x00047598... (18 %)
+Writing at 0x0004d954... (21 %)
+Writing at 0x00053f7b... (23 %)
+Writing at 0x00059bec... (26 %)
+Writing at 0x0005f840... (28 %)
+Writing at 0x0006564e... (31 %)
+Writing at 0x0006b21a... (34 %)
+Writing at 0x0007112e... (36 %)
+Writing at 0x0007711c... (39 %)
+Writing at 0x0007ce3a... (42 %)
+Writing at 0x00082d40... (44 %)
+Writing at 0x00087eda... (47 %)
+Writing at 0x0008d24f... (50 %)
+Writing at 0x00092ba7... (52 %)
+Writing at 0x0009815b... (55 %)
+Writing at 0x0009d4f8... (57 %)
+Writing at 0x000a2b38... (60 %)
+Writing at 0x000a899f... (63 %)
+Writing at 0x000ae2ba... (65 %)
+Writing at 0x000b3fd3... (68 %)
+Writing at 0x000ba2ff... (71 %)
+Writing at 0x000bfe6a... (73 %)
+Writing at 0x000c59a0... (76 %)
+Writing at 0x000cb4b6... (78 %)
+Writing at 0x000d093e... (81 %)
+Writing at 0x000d67b3... (84 %)
+Writing at 0x000e14ff... (86 %)
+Writing at 0x000e7a38... (89 %)
+Writing at 0x000eef59... (92 %)
+Writing at 0x000f4c08... (94 %)
+Writing at 0x000fb189... (97 %)
+Writing at 0x00100e5f... (100 %)
+Wrote 1007840 bytes (620481 compressed) at 0x00010000 in 14.3 seconds (effective 562.2 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 103...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (103 compressed) at 0x00008000 in 0.0 seconds (effective 557.5 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
