@@ -564,6 +564,16 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("D:/ESP32/esp32-idf-project/TODAY_SHOW/build/esp-idf/lvgl/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("D:/ESP32/esp32-idf-project/TODAY_SHOW/build/esp-idf/BSP/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("D:/ESP32/esp32-idf-project/TODAY_SHOW/build/esp-idf/main/cmake_install.cmake")
 endif()
 

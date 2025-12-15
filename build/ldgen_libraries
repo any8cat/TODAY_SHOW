@@ -159,4 +159,9 @@ D:/ESP32/esp32-idf-project/TODAY_SHOW/build/esp-idf/touch_element/libtouch_eleme
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/esp-idf/usb/libusb.a
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/esp-idf/wifi_provisioning/libwifi_provisioning.a
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/esp-idf/json/libjson.a
+D:/ESP32/esp32-idf-project/TODAY_SHOW/build/esp-idf/lvgl/liblvgl.a
+D:/ESP32/esp32-idf-project/TODAY_SHOW/build/esp-idf/BSP/libBSP.a
+D:/ESP32/esp32-idf-project/TODAY_SHOW/build/esp-idf/esp_lcd/libesp_lcd.a
 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/esp-idf/main/libmain.a
+D:/ESP32/esp32-idf-project/TODAY_SHOW/build/esp-idf/lvgl/liblvgl.a
+D:/ESP32/esp32-idf-project/TODAY_SHOW/build/esp-idf/BSP/libBSP.a
