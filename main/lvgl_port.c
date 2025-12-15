@@ -87,8 +87,8 @@ void st7735_hw_init(void) {
         .spi_freq = 27000000,
         .width = LCD_WIDTH,
         .height = LCD_HEIGHT,
-        .x_offset = 0,
-        .y_offset = 0,
+        .x_offset = 2,
+        .y_offset = 3,
         .rotation = 0,
         .done_cb = flush_ready_callback,
         .cb_param = NULL

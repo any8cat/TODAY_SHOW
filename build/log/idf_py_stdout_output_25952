@@ -1,6 +1,6 @@
 Command: ninja flash
 [1/5] C:\Windows\system32\cmd.exe /C "cd /D D:\ESP32\esp32-idf-project\TODAY_SHOW\build\esp-idf\esptool_py && D:\ESP32\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe D:/ESP32/v5.5.1/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app D:/ESP32/esp32-idf-project/TODAY_SHOW/build/partition_table/partition-table.bin D:/ESP32/esp32-idf-project/TODAY_SHOW/build/TODAY_SHOW.bin"
-TODAY_SHOW.bin binary size 0x204e50 bytes. Smallest app partition is 0x400000 bytes. 0x1fb1b0 bytes (50%) free.
+TODAY_SHOW.bin binary size 0x2059d0 bytes. Smallest app partition is 0x400000 bytes. 0x1fa630 bytes (49%) free.
 [2/5] Performing build step for 'bootloader'
 [1/1] C:\Windows\system32\cmd.exe /C "cd /D D:\ESP32\esp32-idf-project\TODAY_SHOW\build\bootloader\esp-idf\esptool_py && D:\ESP32\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe D:/ESP32/v5.5.1/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x0 D:/ESP32/esp32-idf-project/TODAY_SHOW/build/bootloader/bootloader.bin"
 Bootloader binary size 0x5240 bytes. 0x2dc0 bytes (36%) free.
@@ -22,77 +22,77 @@ Changing baud rate to 460800
 Changed.
 Configuring flash size...
 Flash will be erased from 0x00000000 to 0x00005fff...
-Flash will be erased from 0x00010000 to 0x00214fff...
+Flash will be erased from 0x00010000 to 0x00215fff...
 Flash will be erased from 0x00008000 to 0x00008fff...
 SHA digest in image updated
-Compressed 21056 bytes to 13391...
+Compressed 21056 bytes to 13390...
 Writing at 0x00000000... (100 %)
-Wrote 21056 bytes (13391 compressed) at 0x00000000 in 0.6 seconds (effective 274.8 kbit/s)...
+Wrote 21056 bytes (13390 compressed) at 0x00000000 in 0.6 seconds (effective 277.1 kbit/s)...
 Hash of data verified.
-Compressed 2117200 bytes to 938090...
+Compressed 2120144 bytes to 939485...
 Writing at 0x00010000... (1 %)
-Writing at 0x0001c58c... (3 %)
-Writing at 0x00027201... (5 %)
-Writing at 0x0002d41e... (6 %)
-Writing at 0x00034a8c... (8 %)
-Writing at 0x0003c69e... (10 %)
-Writing at 0x00044463... (12 %)
-Writing at 0x00053b07... (13 %)
-Writing at 0x0006a05b... (15 %)
-Writing at 0x000810a4... (17 %)
-Writing at 0x000970e8... (18 %)
-Writing at 0x000ac787... (20 %)
-Writing at 0x000c12d2... (22 %)
-Writing at 0x000d7193... (24 %)
-Writing at 0x000ee39f... (25 %)
-Writing at 0x001029b2... (27 %)
-Writing at 0x00116799... (29 %)
-Writing at 0x0011f15e... (31 %)
-Writing at 0x0012a95b... (32 %)
-Writing at 0x001304a5... (34 %)
-Writing at 0x00136819... (36 %)
-Writing at 0x0013ccab... (37 %)
-Writing at 0x00143063... (39 %)
-Writing at 0x00148baa... (41 %)
-Writing at 0x0014eb5c... (43 %)
-Writing at 0x001551c6... (44 %)
-Writing at 0x0015af81... (46 %)
-Writing at 0x00160c68... (48 %)
-Writing at 0x001671d5... (50 %)
-Writing at 0x0016cf41... (51 %)
-Writing at 0x00172ac1... (53 %)
-Writing at 0x00178780... (55 %)
-Writing at 0x0017e626... (56 %)
-Writing at 0x0018436e... (58 %)
-Writing at 0x0018a29f... (60 %)
-Writing at 0x001902c7... (62 %)
-Writing at 0x001962e7... (63 %)
-Writing at 0x0019b667... (65 %)
-Writing at 0x001a0671... (67 %)
-Writing at 0x001a5f50... (68 %)
-Writing at 0x001ab6b9... (70 %)
-Writing at 0x001b0be9... (72 %)
-Writing at 0x001b60e4... (74 %)
-Writing at 0x001bbd53... (75 %)
-Writing at 0x001c184c... (77 %)
-Writing at 0x001c73b4... (79 %)
-Writing at 0x001cd0d5... (81 %)
-Writing at 0x001d32da... (82 %)
-Writing at 0x001d8e68... (84 %)
-Writing at 0x001de7a6... (86 %)
-Writing at 0x001e3f98... (87 %)
-Writing at 0x001e9582... (89 %)
-Writing at 0x001f3741... (91 %)
-Writing at 0x001fb300... (93 %)
-Writing at 0x00201207... (94 %)
-Writing at 0x00207426... (96 %)
-Writing at 0x0020de11... (98 %)
-Writing at 0x00212f41... (100 %)
-Wrote 2117200 bytes (938090 compressed) at 0x00010000 in 24.6 seconds (effective 687.8 kbit/s)...
+Writing at 0x0001c585... (3 %)
+Writing at 0x00027489... (5 %)
+Writing at 0x0002d5a5... (6 %)
+Writing at 0x00034bc8... (8 %)
+Writing at 0x0003c980... (10 %)
+Writing at 0x000444e8... (12 %)
+Writing at 0x0005359d... (13 %)
+Writing at 0x00069b55... (15 %)
+Writing at 0x000809bb... (17 %)
+Writing at 0x00096aab... (18 %)
+Writing at 0x000ac2b4... (20 %)
+Writing at 0x000c0dd6... (22 %)
+Writing at 0x000d6e29... (24 %)
+Writing at 0x000edf25... (25 %)
+Writing at 0x0010270a... (27 %)
+Writing at 0x001165ed... (29 %)
+Writing at 0x0011f3a0... (31 %)
+Writing at 0x0012ac29... (32 %)
+Writing at 0x00130839... (34 %)
+Writing at 0x00136c61... (36 %)
+Writing at 0x0013d05c... (37 %)
+Writing at 0x00143489... (39 %)
+Writing at 0x00149019... (41 %)
+Writing at 0x0014efe9... (43 %)
+Writing at 0x0015564c... (44 %)
+Writing at 0x0015b298... (46 %)
+Writing at 0x001610da... (48 %)
+Writing at 0x001675e2... (50 %)
+Writing at 0x0016d358... (51 %)
+Writing at 0x00172f39... (53 %)
+Writing at 0x00178b7a... (55 %)
+Writing at 0x0017ea9a... (56 %)
+Writing at 0x00184718... (58 %)
+Writing at 0x0018a68b... (60 %)
+Writing at 0x00190747... (62 %)
+Writing at 0x00196692... (63 %)
+Writing at 0x0019bbd6... (65 %)
+Writing at 0x001a0b4e... (67 %)
+Writing at 0x001a641e... (68 %)
+Writing at 0x001abb36... (70 %)
+Writing at 0x001b1035... (72 %)
+Writing at 0x001b652c... (74 %)
+Writing at 0x001bbfef... (75 %)
+Writing at 0x001c1bc5... (77 %)
+Writing at 0x001c770e... (79 %)
+Writing at 0x001cd440... (81 %)
+Writing at 0x001d3671... (82 %)
+Writing at 0x001d91df... (84 %)
+Writing at 0x001debf8... (86 %)
+Writing at 0x001e4434... (87 %)
+Writing at 0x001e99a9... (89 %)
+Writing at 0x001f3b67... (91 %)
+Writing at 0x001fb60d... (93 %)
+Writing at 0x00201488... (94 %)
+Writing at 0x0020779f... (96 %)
+Writing at 0x0020e2a5... (98 %)
+Writing at 0x00213272... (100 %)
+Wrote 2120144 bytes (939485 compressed) at 0x00010000 in 24.7 seconds (effective 685.5 kbit/s)...
 Hash of data verified.
 Compressed 3072 bytes to 120...
 Writing at 0x00008000... (100 %)
-Wrote 3072 bytes (120 compressed) at 0x00008000 in 0.1 seconds (effective 490.1 kbit/s)...
+Wrote 3072 bytes (120 compressed) at 0x00008000 in 0.1 seconds (effective 461.5 kbit/s)...
 Hash of data verified.
 
 Leaving...

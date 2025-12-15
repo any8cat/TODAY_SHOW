@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "TODAY_SHOW",
-    "project_version":    "142e873-dirty",
+    "project_version":    "89fda16-dirty",
     "project_path":       "D:/ESP32/esp32-idf-project/TODAY_SHOW",
     "idf_path":           "D:/ESP32/v5.5.1/esp-idf",
     "build_dir":          "D:/ESP32/esp32-idf-project/TODAY_SHOW/build",
@@ -1255,7 +1255,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "D:/ESP32/esp32-idf-project/TODAY_SHOW/build/esp-idf/main/libmain.a",
-            "sources": [ "D:/ESP32/esp32-idf-project/TODAY_SHOW/main/TODAY_SHOW.c", "D:/ESP32/esp32-idf-project/TODAY_SHOW/main/lcd_driver.c", "D:/ESP32/esp32-idf-project/TODAY_SHOW/main/weather.c", "D:/ESP32/esp32-idf-project/TODAY_SHOW/main/fonts.c", "D:/ESP32/esp32-idf-project/TODAY_SHOW/main/lvgl_port.c", "D:/ESP32/esp32-idf-project/TODAY_SHOW/main/thunderGod.c" ],
+            "sources": [ "D:/ESP32/esp32-idf-project/TODAY_SHOW/main/TODAY_SHOW.c", "D:/ESP32/esp32-idf-project/TODAY_SHOW/main/weather.c", "D:/ESP32/esp32-idf-project/TODAY_SHOW/main/lvgl_port.c", "D:/ESP32/esp32-idf-project/TODAY_SHOW/main/thunderGod.c" ],
             "include_dirs": [ "." ]
         },
         "mbedtls": {

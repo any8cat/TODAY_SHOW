@@ -1,4 +1,4 @@
-idf_component_register(SRCS "TODAY_SHOW.c" "weather.c" "fonts.c" "lvgl_port.c" "thunderGod.c"
+idf_component_register(SRCS "TODAY_SHOW.c" "weather.c" "lvgl_port.c" "thunderGod.c"
                     INCLUDE_DIRS "."
                     REQUIRES esp_timer esp_wifi nvs_flash lwip freertos esp_driver_spi driver esp_http_client esp_netif esp_event json esp-tls lvgl BSP)
                  
